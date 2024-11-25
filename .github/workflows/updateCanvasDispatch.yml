@@ -44,4 +44,9 @@ jobs:
                   }
                 }
               ]
-          }'
+          }' --fail
+        
+        if [ $? -ne 0 ]; then
+            echo "Slack update failed!"
+            exit 1 
+        fi
