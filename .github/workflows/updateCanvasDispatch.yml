@@ -50,7 +50,8 @@ jobs:
                 }
               ]
           }' --fail)
-        
+        echo $response
+
         status=$(echo $response | \
             python3 -c "import sys, json; print(json.load(sys.stdin)['ok'])")
 
