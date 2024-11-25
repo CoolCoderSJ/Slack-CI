@@ -34,22 +34,22 @@ jobs:
         CANVAS_ID: ${{ github.event.inputs.canvas_id }}
         CONTENTS: ${{ steps.read_file.outputs.CONTENTS }}
       run: |
-        response=$(curl --location 'https://slack.com/api/canvases.edit' \
+        response=$(curl -X POST 'https://slack.com/api/canvases.edit' \
           --header 'Content-Type: application/json' \
           --header "Authorization: Bearer $TOKEN" \
-          --data '{
-              "canvas_id": "$CANVAS_ID",
-              "token": "$TOKEN",
-              "changes": [
+          --data "{
+              \"canvas_id\": \"$CANVAS_ID\",
+              \"token": \"$TOKEN\",
+              \"changes\": [
                 {
-                  "operation": "replace",
-                  "document_content": {
-                    "type": "markdown",
-                    "markdown": "$CONTENTS"
+                  \"operation\": \"replace\",
+                  \"document_content\": {
+                    \"type\": \"markdown\",
+                    \"markdown": \"$CONTENTS\"
                   }
                 }
               ]
-          }' --fail)
+          }" --fail)
         echo $response
 
         status=$(echo $response | \
