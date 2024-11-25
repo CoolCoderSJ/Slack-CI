@@ -26,7 +26,7 @@ jobs:
       run: |
         echo "Reading file ${{ github.event.inputs.file_path }}"
         cat ${{ github.event.inputs.file_path }}
-        echo "CONTENTS=$(cat ${{ github.event.inputs.file_path })" >> $GITHUB_OUTPUT
+        echo "CONTENTS=$(cat ${{ github.event.inputs.file_path }})" >> $GITHUB_OUTPUT
 
     - name: Update Canvas
       env:
