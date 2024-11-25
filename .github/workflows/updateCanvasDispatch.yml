@@ -1,0 +1,47 @@
+name: Manually Update Canvas
+
+on:
+  workflow_dispatch:
+    inputs:
+      canvas_id:
+        description: 'Canvas ID'
+        required: true
+        type: string
+      file_path:
+        description: 'File path in the repository'
+        required: true
+        type: string
+
+jobs:
+  update_canvas:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Read file
+      id: read_file
+      run: |
+        echo "Reading file ${{ github.event.inputs.file_path }}"
+        cat ${{ github.event.inputs.file_path }}
+        echo "::set-output name=file_content::$(cat ${{ github.event.inputs.file_path }})"
+
+    - name: Update Canvas
+      run: |
+        curl --location 'https://slack.com/api/canvases.edit' \
+          --header 'Content-Type: application/json' \
+          --data '{
+              "canvas_id": "${{ github.event.inputs.canvas_id }}",
+              "token": "${{ secrets.SLACK_TOKEN }}",
+              "changes": [
+                {
+                  "operation": "replace",
+                  "document_content": {
+                    "type": "markdown",
+                    "markdown": "${{ steps.read_file.outputs.file_content }}"
+                  }
+                }
+              ]
+          }'
