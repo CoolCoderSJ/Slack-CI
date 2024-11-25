@@ -26,13 +26,13 @@ jobs:
       run: |
         echo "Reading file ${{ github.event.inputs.file_path }}"
         cat ${{ github.event.inputs.file_path }}
-        echo "::set-output name=file_content::$(cat ${{ github.event.inputs.file_path }})"
+        echo "CONTENTS=$(cat ${{ github.event.inputs.file_path })" >> $GITHUB_OUTPUT
 
     - name: Update Canvas
       env:
         TOKEN: ${{ secrets.SLACK_TOKEN }}
         CANVAS_ID: ${{ github.event.inputs.canvas_id }}
-        CONTENTS: ${{ steps.read_file.outputs.file_content }}
+        CONTENTS: ${{ steps.read_file.outputs.CONTENTS }}
       run: |
         response=$(curl --location 'https://slack.com/api/canvases.edit' \
           --header 'Content-Type: application/json' \
