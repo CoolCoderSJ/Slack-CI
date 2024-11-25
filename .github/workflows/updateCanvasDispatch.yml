@@ -36,6 +36,7 @@ jobs:
       run: |
         response=$(curl --location 'https://slack.com/api/canvases.edit' \
           --header 'Content-Type: application/json' \
+          --header "Authorization: Bearer $TOKEN" \
           --data '{
               "canvas_id": "$CANVAS_ID",
               "token": "$TOKEN",
