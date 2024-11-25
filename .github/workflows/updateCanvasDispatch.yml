@@ -39,13 +39,13 @@ jobs:
           --header "Authorization: Bearer $TOKEN" \
           --data "{
               \"canvas_id\": \"$CANVAS_ID\",
-              \"token": \"$TOKEN\",
+              \"token\": \"$TOKEN\",
               \"changes\": [
                 {
                   \"operation\": \"replace\",
                   \"document_content\": {
                     \"type\": \"markdown\",
-                    \"markdown": \"$CONTENTS\"
+                    \"markdown\": \"$CONTENTS\"
                   }
                 }
               ]
