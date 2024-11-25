@@ -29,24 +29,33 @@ jobs:
         echo "::set-output name=file_content::$(cat ${{ github.event.inputs.file_path }})"
 
     - name: Update Canvas
+      env:
+        TOKEN: ${{ secrets.SLACK_TOKEN }}
+        CANVAS_ID: ${{ github.event.inputs.canvas_id }}
+        CONTENTS: ${{ steps.read_file.outputs.file_content }}
       run: |
-        curl --location 'https://slack.com/api/canvases.edit' \
+        response=$(curl --location 'https://slack.com/api/canvases.edit' \
           --header 'Content-Type: application/json' \
           --data '{
-              "canvas_id": "${{ github.event.inputs.canvas_id }}",
-              "token": "${{ secrets.SLACK_TOKEN }}",
+              "canvas_id": "$CANVAS_ID",
+              "token": "$TOKEN",
               "changes": [
                 {
                   "operation": "replace",
                   "document_content": {
                     "type": "markdown",
-                    "markdown": "${{ steps.read_file.outputs.file_content }}"
+                    "markdown": "$CONTENTS"
                   }
                 }
               ]
-          }' --fail
+          }' --fail)
         
-        if [ $? -ne 0 ]; then
-            echo "Slack update failed!"
-            exit 1 
+        status=$(echo $response | \
+            python3 -c "import sys, json; print(json.load(sys.stdin)['ok'])")
+
+        if [ "$status" = "True" ]; then
+            echo "Canvas updated successfully"
+        else
+            echo "Failed to update canvas"
+            exit 1
         fi
