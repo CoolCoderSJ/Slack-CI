@@ -1,4 +1,4 @@
-name: Manually Update Canvas
+name: Update Canvas Automatically
 
 on:
   push:
@@ -22,8 +22,10 @@ jobs:
       run: |
         echo "Reading file $INPUT_PATH"
         cat $INPUT_PATH
-        echo "CONTENTS=$(cat $INPUT_PATH)" >> $GITHUB_OUTPUT
-
+        echo "CONTENTS<<EOF" >> $GITHUB_OUTPUT
+        cat $INPUT_PATH >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+        
     - name: Update Canvas
       env:
         TOKEN: ${{ secrets.SLACK_TOKEN }}
