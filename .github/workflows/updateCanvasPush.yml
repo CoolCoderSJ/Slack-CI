@@ -17,18 +17,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Read file
-      id: read_file
-      run: |
-        echo "Reading file $INPUT_PATH"
-        cat $INPUT_PATH
-        echo "CONTENTS=$(base64 "$INPUT_PATH")" >> $GITHUB_ENV
-        
     - name: Update Canvas
       env:
         TOKEN: ${{ secrets.SLACK_TOKEN }}
-        CONTENTS: echo "${{ env.CONTENTS }}" | base64 --decode
       run: |
+        CONTENTS=$(cat $INPUT_PATH)
         response=$(curl -X POST 'https://slack.com/api/canvases.edit' \
           --header 'Content-Type: application/json' \
           --header "Authorization: Bearer $TOKEN" \
