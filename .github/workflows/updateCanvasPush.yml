@@ -11,7 +11,7 @@ jobs:
     environment: production
     env:
       INPUT_PATH: "contents.md"
-      CANVAS_ID: "C02E3KZQX1H"
+      CANVAS_ID: "F082H1JAAE8"
 
     steps:
     - name: Checkout repository

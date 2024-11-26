@@ -21,21 +21,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Read file
-      id: read_file
-      run: |
-        echo "Reading file ${{ github.event.inputs.file_path }}"
-        cat ${{ github.event.inputs.file_path }}
-        echo "CONTENTS<<EOF" >> $GITHUB_OUTPUT
-        cat ${{ github.event.inputs.file_path }} >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
-
     - name: Update Canvas
       env:
         TOKEN: ${{ secrets.SLACK_TOKEN }}
         CANVAS_ID: ${{ github.event.inputs.canvas_id }}
-        CONTENTS: ${{ steps.read_file.outputs.CONTENTS }}
       run: |
+        CONTENTS=$(cat ${{ github.event.inputs.file_path }})
         response=$(curl -X POST 'https://slack.com/api/canvases.edit' \
           --header 'Content-Type: application/json' \
           --header "Authorization: Bearer $TOKEN" \
