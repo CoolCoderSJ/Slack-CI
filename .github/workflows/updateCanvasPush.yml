@@ -22,16 +22,12 @@ jobs:
       run: |
         echo "Reading file $INPUT_PATH"
         cat $INPUT_PATH
-        {
-            echo "CONTENTS<<EOF"
-            cat $INPUT_PATH
-            echo "EOF"
-        } >> $GITHUB_OUTPUT
+        echo "CONTENTS=$(base64 "$INPUT_PATH")" >> $GITHUB_ENV
         
     - name: Update Canvas
       env:
         TOKEN: ${{ secrets.SLACK_TOKEN }}
-        CONTENTS: ${{ steps.read_file.outputs.CONTENTS }}
+        CONTENTS: echo "${{ env.CONTENTS }}" | base64 --decode
       run: |
         response=$(curl -X POST 'https://slack.com/api/canvases.edit' \
           --header 'Content-Type: application/json' \
