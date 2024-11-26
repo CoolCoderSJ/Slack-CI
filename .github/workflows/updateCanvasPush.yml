@@ -23,7 +23,7 @@ jobs:
         echo "Reading file $INPUT_PATH"
         cat $INPUT_PATH
         echo "CONTENTS<<EOF" >> $GITHUB_OUTPUT
-        cat $INPUT_PATH >> $GITHUB_OUTPUT
+        cat "$INPUT_PATH" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
         
     - name: Update Canvas
