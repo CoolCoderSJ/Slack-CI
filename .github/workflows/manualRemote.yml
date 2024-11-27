@@ -30,9 +30,7 @@ jobs:
         echo "Contents: $CONTENTS"
         response=$(curl -X POST "https://slack-ci.shuchir.dev/update_canvas/$CANVAS_ID" \
           --header 'Content-Type: application/json' \
-          --data "{
-              \"content\": \"$CONTENTS\"
-          }" --fail)
+          --data "$(jq -n --arg content "$CONTENTS" '{"content":$content}')" --fail)
         echo $response
 
         status=$(echo $response | \
