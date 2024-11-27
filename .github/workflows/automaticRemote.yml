@@ -22,7 +22,7 @@ jobs:
         TOKEN: ${{ secrets.SLACK_TOKEN }}
       run: |
         CONTENTS=$(cat $INPUT_PATH)
-        response=$(curl -X POST 'https://slack-ci.shuchir.dev/update_canvas/$CANVAS_ID' \
+        response=$(curl -X POST "https://slack-ci.shuchir.dev/update_canvas/$CANVAS_ID" \
           --header 'Content-Type: application/json' \
           --data "$(jq -n --arg content "$CONTENTS" '{"content":$content}')" --fail)
         echo $response
