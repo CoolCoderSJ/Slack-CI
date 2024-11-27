@@ -8,8 +8,6 @@ app = Flask(__name__)
 
 @app.post('/canvas')
 def list_canvases():
-    print(request.form)
-
     r = requests.get(f"https://slack.com/api/conversations.info?channel={request.form['channel_id']}", headers={
         "Content-Type": "application/json",
         "Authorization": f"Bearer {os.environ['TOKEN']}"
@@ -23,8 +21,6 @@ def list_canvases():
 
 @app.post('/update_canvas/<canvas_id>')
 def update_canvas(canvas_id):
-    print(request.json)
-
     r = requests.post("https://slack.com/api/canvases.edit", headers={
         "Content-Type": "application/json",
         "Authorization": f"Bearer {os.environ['TOKEN']}"
