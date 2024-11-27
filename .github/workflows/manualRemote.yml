@@ -1,0 +1,45 @@
+name: Manually Update Canvas [Remote]
+
+on:
+  workflow_dispatch:
+    inputs:
+      canvas_id:
+        description: 'Canvas ID'
+        required: true
+        type: string
+      file_path:
+        description: 'File path in the repository'
+        required: true
+        type: string
+
+jobs:
+  update_canvas:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Update Canvas
+      env:
+        TOKEN: ${{ secrets.SLACK_TOKEN }}
+        CANVAS_ID: ${{ github.event.inputs.canvas_id }}
+      run: |
+        CONTENTS=$(cat ${{ github.event.inputs.file_path }})
+        response=$(curl -X POST "https://slack-ci.shuchir.dev/update_canvas/$CANVAS_ID" \
+          --header 'Content-Type: application/json' \
+          --data "{
+              \"content\": \"$CONTENTS\"
+          }" --fail)
+        echo $response
+
+        status=$(echo $response | \
+            python3 -c "import sys, json; print(json.load(sys.stdin)['ok'])")
+
+        if [ "$status" = "True" ]; then
+            echo "Canvas updated successfully"
+        else
+            echo "Failed to update canvas"
+            exit 1
+        fi
