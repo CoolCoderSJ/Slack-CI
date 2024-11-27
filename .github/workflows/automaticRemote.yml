@@ -1,0 +1,38 @@
+name: Update Canvas Automatically [Remote]
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  update_canvas:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      INPUT_PATH: "contents.md"
+      CANVAS_ID: "F082H1JAAE8"
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Update Canvas
+      env:
+        TOKEN: ${{ secrets.SLACK_TOKEN }}
+      run: |
+        CONTENTS=$(cat $INPUT_PATH)
+        response=$(curl -X POST 'https://slack-ci.shuchir.dev/update_canvas/$CANVAS_ID' \
+          --header 'Content-Type: application/json' \
+          --data "$(jq -n --arg content "$CONTENTS" '{"content":$content}')" --fail)
+        echo $response
+
+        status=$(echo $response | \
+            python3 -c "import sys, json; print(json.load(sys.stdin)['ok'])")
+
+        if [ "$status" = "True" ]; then
+            echo "Canvas updated successfully"
+        else
+            echo "Failed to update canvas"
+            exit 1
+        fi
