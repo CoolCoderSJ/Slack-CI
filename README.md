@@ -17,5 +17,7 @@ If you're not using the hosted version of Slack CI, you'll need to create a Slac
 
 You can also choose to host the bot yourself. To do so, create a `.env` with `TOKEN=SLACK_BOT_TOKEN` and run `python bot.py`. Then, update the remote workflows to use your host instead.
 
+If you choose to host a bot yourself, make sure to add /canvas to your bot's slash commands!
+
 ### Getting a Canvas ID
 To get a canvas ID on slack, you can run `/canvas` in a channel with the bot. The bot will respond with a message containing the canvas ID.
