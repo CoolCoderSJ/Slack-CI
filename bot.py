@@ -23,7 +23,7 @@ def list_canvases():
 
 @app.post('/update_canvas/<canvas_id>')
 def update_canvas(canvas_id):
-    print(request.form)
+    print(request.json)
 
     r = requests.post("https://slack.com/api/canvases.edit", headers={
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ def update_canvas(canvas_id):
                   "operation": "replace",
                   "document_content": {
                     "type": "markdown",
-                    "markdown": request.form['content']
+                    "markdown": request.json['content']
                   }
                 }
               ]

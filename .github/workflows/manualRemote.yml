@@ -27,6 +27,7 @@ jobs:
         CANVAS_ID: ${{ github.event.inputs.canvas_id }}
       run: |
         CONTENTS=$(cat ${{ github.event.inputs.file_path }})
+        echo "Contents: $CONTENTS"
         response=$(curl -X POST "https://slack-ci.shuchir.dev/update_canvas/$CANVAS_ID" \
           --header 'Content-Type: application/json' \
           --data "{
